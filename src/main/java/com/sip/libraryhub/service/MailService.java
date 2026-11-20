@@ -2,6 +2,7 @@ package com.sip.libraryhub.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.annotation.Async;
@@ -15,12 +16,16 @@ public class MailService {
 
     private final JavaMailSender sender;
 
-    public MailService(JavaMailSender sender) {
-        this.sender = sender;
+    public MailService(ObjectProvider<JavaMailSender> senderProvider) {
+        this.sender = senderProvider.getIfAvailable();
     }
 
     @Async
     public void notifyAdminNewUser(String nom, String prenom, String email) {
+        if (sender == null) {
+            log.warn("JavaMailSender non configuré : vérifiez MAIL_HOST et MAIL_USERNAME.");
+            return;
+        }
         try {
             SimpleMailMessage m = new SimpleMailMessage();
             m.setFrom(NOTIFICATION_EMAIL);
