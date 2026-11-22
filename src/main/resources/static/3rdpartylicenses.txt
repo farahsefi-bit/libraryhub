@@ -704,9 +704,6 @@ MIT
 @ngx-translate/http-loader
 MIT
 
-@nicky-lenaers/ngx-scroll-to
-MIT
-
 @popperjs/core
 MIT
 The MIT License (MIT)
